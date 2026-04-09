@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Étude FAO — Sous-nutrition dans le monde 2013–2017</title>
+
+  <!-- Fonts: Sora (display), Barlow (body), JetBrains Mono (numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES — THEME
+       Change these variables to retheme the whole deck
+       ============================================ */
+    :root {
+      /* Palette */
+      --bg:          #070b12;
+      --bg-card:     #0d1421;
+      --bg-card2:    #111929;
+      --red:         #dc2626;
+      --red-soft:    rgba(220, 38, 38, 0.10);
+      --red-border:  rgba(220, 38, 38, 0.28);
+      --blue:        #3b82f6;
+      --blue-soft:   rgba(59, 130, 246, 0.10);
+      --blue-border: rgba(59, 130, 246, 0.28);
+      --yellow:      #f59e0b;
+      --text:        #e8edf5;
+      --text-muted:  #7a8a9e;
+      --text-dim:    #3d4f65;
+      --border:      rgba(255,255,255,0.07);
+      --line:        rgba(255,255,255,0.05);
+
+      /* Typography */
+      --font-display: 'Sora', sans-serif;
+      --font-body:    'Barlow', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+
+      /* Sizes — all clamp() for responsive scaling */
+      --title-size:  clamp(2rem,   5vw,  4.2rem);
+      --h2-size:     clamp(1.15rem, 2.4vw, 1.9rem);
+      --h3-size:     clamp(0.9rem,  1.7vw, 1.35rem);
+      --body-size:   clamp(0.72rem, 1.25vw, 0.97rem);
+      --small-size:  clamp(0.62rem, 0.9vw,  0.8rem);
+      --num-huge:    clamp(2.4rem,  5.5vw,  4.8rem);
+      --num-large:   clamp(1.6rem,  3.5vw,  3rem);
+
+      /* Spacing */
+      --slide-padding: clamp(1.4rem, 4vw, 4rem);
+      --content-gap:   clamp(0.6rem, 1.4vw, 1.4rem);
+      --element-gap:   clamp(0.3rem, 0.7vw, 0.7rem);
+
+      /* Animation */
+      --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --dur: 0.65s;
+    }
+
+    /* ============================================
+       RESET
+       ============================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    ul { list-style: none; }
+
+    /* ============================================
+       VIEWPORT BASE — mandatory per slide rules
+       ============================================ */
+    html, body { height: 100%; overflow-x: hidden; }
+    html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      font-family: var(--font-body);
+      color: var(--text);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+    }
+
+    img {
+      max-width: 100%;
+      max-height: min(50vh, 400px);
+      object-fit: contain;
+    }
+
+    /* ============================================
+       RESPONSIVE BREAKPOINTS
+       ============================================ */
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap:   clamp(0.35rem, 1.2vw, 0.9rem);
+        --h2-size:       clamp(1rem, 2.8vw, 1.6rem);
+        --num-huge:      clamp(2rem, 4.5vw, 3.5rem);
+        --num-large:     clamp(1.4rem, 3vw, 2.4rem);
+      }
+    }
+    @media (max-height: 600px) {
+      :root {
+        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+        --body-size:     clamp(0.68rem, 1.1vw, 0.88rem);
+        --num-huge:      clamp(1.8rem, 4vw, 3rem);
+      }
+      .nav-dots { display: none; }
+    }
+    @media (max-height: 500px) {
+      :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); }
+    }
+    @media (max-width: 768px) {
+      .two-col { grid-template-columns: 1fr !important; }
+      .col-img  { display: none; }
+      .conclusion-grid { grid-template-columns: 1fr !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ============================================
+       GRID BACKGROUND — subtle structural lines
+       ============================================ */
+    .slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .slide > * { position: relative; z-index: 1; }
+
+    /* ============================================
+       PROGRESS BAR
+       ============================================ */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+      z-index: 1000;
+      transition: width 0.35s ease;
+      width: 0%;
+    }
+
+    /* ============================================
+       NAV DOTS
+       ============================================ */
+    .nav-dots {
+      position: fixed;
+      right: clamp(0.6rem, 1.5vw, 1.2rem);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      z-index: 1000;
+    }
+    .nav-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav-dot.active {
+      background: var(--red);
+      box-shadow: 0 0 6px var(--red);
+      transform: scale(1.5);
+    }
+    .nav-dot:hover:not(.active) { background: var(--text-muted); transform: scale(1.2); }
+
+    /* ============================================
+       ANIMATIONS — .reveal triggered by .visible
+       ============================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity var(--dur) var(--ease-expo),
+                  transform var(--dur) var(--ease-expo);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: opacity var(--dur) var(--ease-expo),
+                  transform var(--dur) var(--ease-expo);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(28px);
+      transition: opacity var(--dur) var(--ease-expo),
+                  transform var(--dur) var(--ease-expo);
+    }
+    .slide.visible .reveal,
+    .slide.visible .reveal-left,
+    .slide.visible .reveal-right { opacity: 1; transform: none; }
+
+    /* Stagger delays */
+    .reveal:nth-child(1)  { transition-delay: 0.04s; }
+    .reveal:nth-child(2)  { transition-delay: 0.13s; }
+    .reveal:nth-child(3)  { transition-delay: 0.22s; }
+    .reveal:nth-child(4)  { transition-delay: 0.31s; }
+    .reveal:nth-child(5)  { transition-delay: 0.40s; }
+    .reveal:nth-child(6)  { transition-delay: 0.49s; }
+    .reveal:nth-child(7)  { transition-delay: 0.58s; }
+    .reveal:nth-child(8)  { transition-delay: 0.67s; }
+    .reveal-left  { transition-delay: 0.08s; }
+    .reveal-right { transition-delay: 0.18s; }
+
+    /* ============================================
+       SHARED COMPONENTS
+       ============================================ */
+
+    /* Section label */
+    .slide-number {
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      color: var(--red);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: clamp(0.25rem, 0.6vw, 0.5rem);
+    }
+
+    /* Slide heading */
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: var(--h2-size);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: clamp(0.4rem, 0.9vw, 0.9rem);
+    }
+
+    /* Red accent bar */
+    .red-bar {
+      width: clamp(1.8rem, 4vw, 3.5rem);
+      height: 3px;
+      background: var(--red);
+      box-shadow: 0 0 8px var(--red);
+      margin-bottom: clamp(0.5rem, 1vw, 1rem);
+      flex-shrink: 0;
+    }
+
+    /* Two-column layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1rem, 2.5vw, 2.8rem);
+      align-items: center;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .two-col.right-heavy { grid-template-columns: 0.75fr 1.25fr; }
+    .two-col.left-heavy  { grid-template-columns: 1.1fr 0.9fr; }
+
+    .col-text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--element-gap);
+      overflow: hidden;
+      min-height: 0;
+    }
+    .col-img {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .col-img img {
+      width: 100%;
+      max-height: min(60vh, 480px);
+      object-fit: contain;
+      border-radius: 6px;
+    }
+
+    /* Big number — hero stat */
+    .stat-hero {
+      font-family: var(--font-mono);
+      font-size: var(--num-huge);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: clamp(0.2rem, 0.5vw, 0.4rem);
+    }
+    .stat-hero.red  { color: var(--red);  text-shadow: 0 0 30px rgba(220,38,38,0.35); }
+    .stat-hero.blue { color: var(--blue); text-shadow: 0 0 30px rgba(59,130,246,0.35); }
+
+    /* Medium stat */
+    .stat-large {
+      font-family: var(--font-mono);
+      font-size: var(--num-large);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .stat-large.red  { color: var(--red); }
+    .stat-large.blue { color: var(--blue); }
+    .stat-large.yellow { color: var(--yellow); }
+
+    /* Stat descriptor */
+    .stat-label {
+      font-size: var(--body-size);
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Bordered card */
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: clamp(0.65rem, 1.3vw, 1.3rem);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .stat-box.red-accent  { border-left: 3px solid var(--red);  }
+    .stat-box.blue-accent { border-left: 3px solid var(--blue); }
+    .stat-box.red-top     { border-top:  3px solid var(--red);  }
+    .stat-box.blue-top    { border-top:  3px solid var(--blue); }
+
+    /* Bullet list */
+    .bullet-list {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.25rem, 0.55vw, 0.55rem);
+    }
+    .bullet-list li {
+      font-size: var(--body-size);
+      color: var(--text);
+      padding-left: 1.3em;
+      position: relative;
+      line-height: 1.5;
+    }
+    .bullet-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--red);
+      font-size: 0.75em;
+      top: 0.18em;
+    }
+
+    /* Inline color helpers */
+    .hi-red   { color: var(--red);  font-weight: 600; }
+    .hi-blue  { color: var(--blue); font-weight: 600; }
+    .hi-white { color: var(--text); font-weight: 600; }
+
+    /* Pill tag */
+    .pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      padding: 0.22em 0.8em;
+      border-radius: 100px;
+      border: 1px solid;
+      line-height: 1.5;
+      flex-shrink: 0;
+    }
+    .pill.red     { color: var(--red);  border-color: var(--red-border);  background: var(--red-soft); }
+    .pill.blue    { color: var(--blue); border-color: var(--blue-border); background: var(--blue-soft); }
+    .pill.neutral { color: var(--text-muted); border-color: var(--border); background: var(--bg-card); }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    /* Thin horizontal divider */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--line);
+      flex-shrink: 0;
+    }
+
+    /* Iframe wrapper */
+    .iframe-wrap {
+      border-radius: 7px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      width: 100%;
+      height: min(62vh, 500px);
+      min-height: 320px;
+    }
+    .iframe-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      min-height: 320px;
+    }
+    .iframe-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 260px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      text-align: center;
+      padding: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* ============================================
+       SLIDE 1 — TITLE
+       ============================================ */
+    .title-slide { justify-content: center; }
+    .title-slide .slide-content { justify-content: center; }
+
+    .title-eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      color: var(--red);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: clamp(0.4rem, 1vw, 1rem);
+    }
+    .title-main {
+      font-family: var(--font-display);
+      font-size: var(--title-size);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.08;
+      max-width: 14ch;
+      margin-bottom: clamp(0.4rem, 1vw, 1rem);
+    }
+    .title-main em { color: var(--red); font-style: normal; }
+
+    .title-meta {
+      font-size: var(--body-size);
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .bg-word {
+      position: absolute;
+      bottom: -0.05em;
+      right: clamp(1rem, 4vw, 4rem);
+      font-family: var(--font-mono);
+      font-size: clamp(5rem, 18vw, 16rem);
+      font-weight: 700;
+      color: rgba(220,38,38,0.04);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    /* ============================================
+       SLIDE 15 — CONCLUSION
+       ============================================ */
+    .conclusion-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(0.7rem, 1.8vw, 1.8rem);
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .conclusion-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--red);
+      border-radius: 7px;
+      padding: clamp(0.8rem, 1.5vw, 1.5rem);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      overflow: hidden;
+    }
+    .conclusion-num {
+      font-family: var(--font-mono);
+      font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+    }
+    .conclusion-text {
+      font-size: var(--body-size);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* ============================================
+       INLINE EDITING
+       ============================================ */
+    .edit-hotzone {
+      position: fixed;
+      top: 0; left: 0;
+      width: 80px; height: 80px;
+      z-index: 10000;
+      cursor: pointer;
+    }
+    .edit-toggle {
+      position: fixed;
+      top: 14px; left: 14px;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(220,38,38,0.92);
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 10001;
+      color: white;
+    }
+    .edit-toggle.show,
+    .edit-toggle.active { opacity: 1; pointer-events: auto; }
+
+    .edit-banner {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(220,38,38,0.92);
+      color: white;
+      text-align: center;
+      padding: 0.45rem 1rem;
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .edit-banner.active { opacity: 1; pointer-events: auto; }
+
+    body.edit-active [contenteditable="true"] {
+      outline: 1px dashed rgba(220,38,38,0.45);
+      border-radius: 3px;
+      cursor: text;
+      min-width: 2px;
+    }
+    body.edit-active [contenteditable="true"]:focus {
+      outline: 2px solid var(--red);
+      background: rgba(220,38,38,0.04);
+    }
+
+    /* ============================================
+       SLIDE COUNTER — bottom right
+       ============================================ */
+    #slideCounter {
+      position: fixed;
+      bottom: clamp(0.6rem, 1.5vw, 1.2rem);
+      right: clamp(1.2rem, 3vw, 2.5rem);
+      font-family: var(--font-mono);
+      font-size: var(--small-size);
+      color: var(--text-dim);
+      z-index: 1000;
+      letter-spacing: 0.08em;
+      transition: color 0.3s ease;
+    }
+
+    /* ============================================
+       SLIDE 16 — MERCI & QUESTIONS
+       ============================================ */
+    .merci-slide { justify-content: center; align-items: center; }
+    .merci-slide .slide-content {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .merci-big {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: clamp(0.4rem, 1vw, 1rem);
+    }
+    .merci-sub {
+      font-family: var(--font-mono);
+      font-size: clamp(1rem, 2.5vw, 2rem);
+      color: var(--red);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: clamp(1rem, 2.5vw, 2.5rem);
+    }
+    .merci-meta {
+      font-size: var(--body-size);
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .merci-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: clamp(8rem, 30vw, 26rem);
+      font-weight: 800;
+      color: rgba(220,38,38,0.03);
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.05em;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress & navigation -->
+  <div class="progress-bar" id="progressBar"></div>
+  <nav class="nav-dots" id="navDots" aria-label="Navigation des slides"></nav>
+  <div id="slideCounter">1 / 16</div>
+
+  <!-- Edit controls -->
+  <div class="edit-hotzone" id="editHotzone"></div>
+  <button class="edit-toggle" id="editToggle" title="Mode édition (E)">✏️</button>
+  <div class="edit-banner" id="editBanner">
+    MODE ÉDITION — Cliquez sur n'importe quel texte pour le modifier &nbsp;·&nbsp;
+    <strong>Ctrl+S</strong> Exporter &nbsp;·&nbsp;
+    <strong>E</strong> ou icône pour quitter
+  </div>
+
+
+  <!-- ============================================================
+       SLIDE 1 — TITRE
+       ============================================================ -->
+  <section class="slide title-slide" id="slide-1">
+    <div class="slide-content">
+      <p class="title-eyebrow reveal">Organisation des Nations Unies pour l'alimentation et l'agriculture</p>
+      <h1 class="title-main reveal">Étude sur la <em>sous-nutrition</em> dans le monde</h1>
+      <div class="red-bar reveal"></div>
+      <div class="title-meta reveal">
+        <strong style="color:var(--text);">FAO · FAOSTAT · 2013–2017</strong><br>
+        Analyse de données · Python · Matplotlib / Seaborn / Plotly / Folium
+        <br><br>
+        <span class="pill red">Soutenance académique · 15 min</span>
+        &nbsp;
+        <span class="pill neutral">Data Analyst</span>
+        <br><br>
+        <strong style="color:var(--text);font-family:var(--font-display);font-size:1.05em;">Badre Bouziane</strong>
+        &nbsp;&nbsp;·&nbsp;&nbsp;
+        <span id="dateJour" style="color:var(--text-muted);"></span>
+      </div>
+    </div>
+    <div class="bg-word">FAO</div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 2 — CONTEXTE & DONNÉES
+       ============================================================ -->
+  <section class="slide" id="slide-2">
+    <div class="slide-content">
+      <p class="slide-number reveal">01 / Contexte</p>
+      <h2 class="slide-title reveal">Contexte & Sources de données</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <p class="reveal" style="font-size:var(--body-size);color:var(--text-muted);">4 datasets issus de <strong style="color:var(--text);">FAOSTAT</strong> (données publiques)</p>
+          <div class="stat-box red-accent reveal">
+            <span class="pill red" style="align-self:flex-start;">Dataset 1</span>
+            <strong style="font-size:var(--body-size);">Population</strong>
+            <span class="stat-label">Données démographiques par pays et année</span>
+          </div>
+          <div class="stat-box red-accent reveal">
+            <span class="pill red" style="align-self:flex-start;">Dataset 2</span>
+            <strong style="font-size:var(--body-size);">Disponibilité alimentaire</strong>
+            <span class="stat-label">Production, importations, utilisation par pays</span>
+          </div>
+          <div class="stat-box blue-accent reveal">
+            <span class="pill blue" style="align-self:flex-start;">Dataset 3</span>
+            <strong style="font-size:var(--body-size);">Insécurité alimentaire</strong>
+            <span class="stat-label">Taux de sous-nutrition par pays</span>
+          </div>
+          <div class="stat-box blue-accent reveal">
+            <span class="pill blue" style="align-self:flex-start;">Dataset 4</span>
+            <strong style="font-size:var(--body-size);">Aide alimentaire</strong>
+            <span class="stat-label">Volumes d'aide reçus/envoyés par pays</span>
+          </div>
+        </div>
+
+        <div class="col-text">
+          <div class="stat-box reveal">
+            <strong style="font-size:var(--body-size);">Source FAOSTAT</strong>
+            <span class="stat-label">Base de données ouverte de la FAO, librement accessible et réutilisable.</span>
+          </div>
+          <div class="stat-box reveal">
+            <strong style="font-size:var(--body-size);">Conformité RGPD</strong>
+            <span class="stat-label">Données agrégées par pays uniquement. Aucune donnée personnelle identifiable.</span>
+          </div>
+          <div class="divider reveal"></div>
+          <p class="reveal" style="font-size:var(--body-size);color:var(--text-muted);line-height:1.6;">
+            Période couverte : <strong style="color:var(--text);">2013–2017</strong>.<br>
+            Le filtrage 2017 est effectué via l'intervalle
+            <span style="font-family:var(--font-mono);color:var(--blue);">2016-2018</span>
+            disponible dans FAOSTAT.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 3 — MÉTHODOLOGIE
+       ============================================================ -->
+  <section class="slide" id="slide-3">
+    <div class="slide-content">
+      <p class="slide-number reveal">02 / Méthodologie</p>
+      <h2 class="slide-title reveal">Méthodologie & Outils</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <p class="reveal" style="font-size:var(--small-size);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Langage & Librairies</p>
+          <div class="tag-row reveal">
+            <span class="pill red">Python</span>
+            <span class="pill red">Pandas</span>
+            <span class="pill neutral">Matplotlib</span>
+            <span class="pill neutral">Seaborn</span>
+            <span class="pill neutral">Plotly</span>
+            <span class="pill neutral">Folium</span>
+          </div>
+          <div class="divider reveal"></div>
+          <ul class="bullet-list">
+            <li class="reveal"><span class="hi-white">Chargement</span> des 4 fichiers CSV FAOSTAT</li>
+            <li class="reveal"><span class="hi-white">Nettoyage</span> — valeurs manquantes, encodages, types</li>
+            <li class="reveal"><span class="hi-white">Jointures</span> sur les clés pays × année</li>
+            <li class="reveal"><span class="hi-white">Filtrage</span> sur l'intervalle 2016–2018 (proxy 2017)</li>
+            <li class="reveal"><span class="hi-white">Agrégation</span> et calcul des indicateurs clés</li>
+          </ul>
+        </div>
+
+        <div class="col-text">
+          <p class="reveal" style="font-size:var(--small-size);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">Visualisations produites</p>
+          <ul class="bullet-list">
+            <li class="reveal">Graphiques <span class="hi-red">Top 10</span> pays sous-nutrition</li>
+            <li class="reveal">Répartition disponibilité alimentaire</li>
+            <li class="reveal">Utilisation des <span class="hi-white">céréales</span> mondiales</li>
+            <li class="reveal">Évolution aide alimentaire (courbes)</li>
+            <li class="reveal">Carte choroplèthe interactive <span class="hi-blue">(Folium)</span></li>
+          </ul>
+          <div class="divider reveal"></div>
+          <div class="stat-box reveal">
+            <strong style="font-size:var(--body-size);">RGPD — Pipeline conforme</strong>
+            <span class="stat-label">Données publiques, agrégées, sans aucune donnée personnelle à aucune étape du traitement.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 4 — 3.1 PROPORTION SOUS-NUTRITION + CARTE
+       ============================================================ -->
+  <section class="slide" id="slide-4">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.1 / Sous-nutrition mondiale</p>
+      <h2 class="slide-title reveal">Proportion de personnes sous-nutries (2017)</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col" style="flex:1;min-height:0;align-items:start;grid-template-columns:0.7fr 1.3fr;">
+        <div class="col-text">
+          <div class="reveal">
+            <div class="stat-hero red" data-counter="535.7" data-suffix="M">535.7M</div>
+            <div class="stat-label">personnes sous-nutries en 2017</div>
+          </div>
+          <div class="divider reveal"></div>
+          <div class="reveal">
+            <div class="stat-large blue" data-counter="7.1" data-suffix="%">7.1%</div>
+            <div class="stat-label">de la population mondiale</div>
+          </div>
+          <div class="divider reveal"></div>
+          <p class="reveal" style="font-size:var(--body-size);color:var(--text-muted);">
+            Base : <strong style="color:var(--text);">7,55 milliards</strong> d'habitants en 2017
+          </p>
+          <div class="stat-box red-accent reveal">
+            <span class="stat-label">1 personne sur <strong style="color:var(--red);font-size:1.15em;">14</strong> souffre de sous-nutrition dans le monde.</span>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right" style="align-items:flex-start;height:100%;">
+          <div class="iframe-wrap">
+            <iframe
+              src="exports/08_carte_sous_nutrition.html"
+              title="Carte mondiale de la sous-nutrition"
+              loading="lazy"
+              allow="fullscreen">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 5 — 3.2 PERSONNES THÉORIQUEMENT NOURRIES
+       ============================================================ -->
+  <section class="slide" id="slide-5">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.2 / Capacité de production mondiale</p>
+      <h2 class="slide-title reveal">Personnes théoriquement nourries par la production mondiale</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <div class="reveal">
+            <div class="stat-hero blue" data-counter="8367593851" data-format="integer">8 367 593 851</div>
+            <div class="stat-label">personnes nourries théoriquement</div>
+          </div>
+          <div class="divider reveal"></div>
+          <div class="reveal">
+            <div class="stat-large yellow" data-counter="110.9" data-suffix="%">110.9%</div>
+            <div class="stat-label">de la population mondiale (7,55 Md)</div>
+          </div>
+          <div class="divider reveal"></div>
+          <p class="reveal" style="font-size:var(--body-size);color:var(--text-muted);">
+            Base : <strong style="color:var(--text);">2 500 kcal/personne/jour</strong> (seuil OMS/FAO)
+          </p>
+        </div>
+
+        <div class="col-text">
+          <div class="stat-box blue-top reveal" style="padding:clamp(0.9rem,1.8vw,1.8rem);">
+            <div style="font-family:var(--font-display);font-size:var(--h3-size);font-weight:700;color:var(--blue);margin-bottom:0.4rem;">Le monde produit ASSEZ</div>
+            <p class="stat-label" style="font-size:var(--body-size);line-height:1.65;">
+              La production alimentaire mondiale est <strong style="color:var(--text);">suffisante pour nourrir 110% de la population mondiale</strong>. La famine n'est pas un problème de production.
+            </p>
+          </div>
+          <div class="stat-box reveal">
+            <span class="stat-label">Ce chiffre inclut toutes les catégories d'aliments : végétaux, viande, produits laitiers, etc.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 6 — 3.3 VÉGÉTAUX SEULEMENT
+       ============================================================ -->
+  <section class="slide" id="slide-6">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.3 / Alimentation végétale</p>
+      <h2 class="slide-title reveal">Avec les végétaux seulement</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <div class="reveal">
+            <div class="stat-hero blue" data-counter="6904305685" data-format="integer">6 904 305 685</div>
+            <div class="stat-label">personnes nourries avec végétaux uniquement</div>
+          </div>
+          <div class="divider reveal"></div>
+          <div class="reveal">
+            <div class="stat-large blue" data-counter="91.5" data-suffix="%">91.5%</div>
+            <div class="stat-label">de la population mondiale</div>
+          </div>
+        </div>
+
+        <div class="col-text">
+          <div class="stat-box blue-top reveal" style="padding:clamp(0.9rem,1.8vw,1.8rem);">
+            <div style="font-family:var(--font-display);font-size:var(--h3-size);font-weight:700;color:var(--blue);margin-bottom:0.4rem;">Quasi-suffisance végétale</div>
+            <p class="stat-label" style="font-size:var(--body-size);line-height:1.65;">
+              En réorientant les végétaux vers la consommation humaine directe,
+              <strong style="color:var(--text);">91,5% de la population mondiale</strong>
+              pourrait être nourrie — sans aucun produit animal.
+            </p>
+          </div>
+          <div class="stat-box red-accent reveal">
+            <span class="stat-label">L'écart jusqu'à 100% est un problème de <strong style="color:var(--text);">distribution géographique</strong> et d'accès économique, pas de volume produit.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 7 — 3.4 RÉPARTITION DISPONIBILITÉ
+       ============================================================ -->
+  <section class="slide" id="slide-7">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.4 / Distribution alimentaire</p>
+      <h2 class="slide-title reveal">Répartition de la disponibilité intérieure mondiale</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col right-heavy" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <ul class="bullet-list">
+            <li class="reveal"><span class="hi-blue">49,5%</span> → Nourriture humaine directe</li>
+            <li class="reveal"><span class="hi-white">22,4%</span> → Traitement industriel</li>
+            <li class="reveal"><span class="hi-white">13,2%</span> → Alimentation animale</li>
+            <li class="reveal"><span class="hi-white">8,8%</span>  → Autres usages</li>
+            <li class="reveal"><span class="hi-red">4,6%</span>   → Pertes alimentaires</li>
+            <li class="reveal"><span class="hi-white">1,6%</span>  → Semences</li>
+          </ul>
+          <div class="divider reveal"></div>
+          <div class="stat-box red-accent reveal">
+            <span class="stat-label">Moins de <strong style="color:var(--red);">la moitié</strong> de la disponibilité alimentaire mondiale va directement à l'alimentation humaine.</span>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right">
+          <img src="exports/02_repartition_dispo.png" alt="Répartition de la disponibilité intérieure mondiale">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 8 — 3.5 UTILISATION DES CÉRÉALES
+       ============================================================ -->
+  <section class="slide" id="slide-8">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.5 / Utilisation des céréales</p>
+      <h2 class="slide-title reveal">Destination des céréales mondiales</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col right-heavy" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--element-gap);">
+            <div class="stat-box blue-accent reveal">
+              <div class="stat-large blue" style="font-size:clamp(1.3rem,2.8vw,2.2rem);">42.8%</div>
+              <div class="stat-label">Consommation humaine</div>
+            </div>
+            <div class="stat-box red-accent reveal">
+              <div class="stat-large red" style="font-size:clamp(1.3rem,2.8vw,2.2rem);">36.3%</div>
+              <div class="stat-label">Alimentation animale</div>
+            </div>
+          </div>
+          <div class="stat-box red-top reveal" style="padding:clamp(0.75rem,1.5vw,1.4rem);">
+            <div style="font-family:var(--font-display);font-size:var(--h3-size);font-weight:700;color:var(--red);margin-bottom:0.3rem;">Chiffre clé</div>
+            <p class="stat-label" style="font-size:var(--body-size);line-height:1.6;">
+              Presque <strong style="color:var(--text);">autant de céréales</strong> vont aux animaux qu'aux humains. Réorienter une fraction de cette ressource couvrirait le déficit alimentaire mondial.
+            </p>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right">
+          <img src="exports/03_cereales.png" alt="Utilisation des céréales mondiales">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 9 — 3.6 TOP 10 SOUS-NUTRITION
+       ============================================================ -->
+  <section class="slide" id="slide-9">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.6 / Pays les plus touchés</p>
+      <h2 class="slide-title reveal">Top 10 — Taux de sous-nutrition par pays (2017)</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col right-heavy" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <ul class="bullet-list">
+            <li class="reveal"><span class="hi-red">Haïti</span> — <strong>48,3%</strong></li>
+            <li class="reveal"><span class="hi-red">Corée du Nord</span> — <strong>47,2%</strong></li>
+            <li class="reveal"><span class="hi-red">Madagascar</span> — <strong>41,1%</strong></li>
+            <li class="reveal">Libéria 38,3% · Lesotho 38,2% · Tchad 38,0%</li>
+            <li class="reveal">Rwanda 35,1% · Mozambique 32,8%</li>
+            <li class="reveal">Timor-Leste 32,2% · Afghanistan 28,9%</li>
+          </ul>
+          <div class="divider reveal"></div>
+          <div class="stat-box blue-accent reveal">
+            <span class="stat-label">
+              Moyenne mondiale : <strong style="color:var(--blue);">7,1%</strong><br>
+              Ces pays affichent un taux <strong style="color:var(--red);">×4 à ×7</strong> supérieur à la moyenne.
+            </span>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right">
+          <img src="exports/01_top10_sous_nutrition.png" alt="Top 10 pays sous-nutrition">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 10 — 3.7 TOP 10 AIDE ALIMENTAIRE
+       ============================================================ -->
+  <section class="slide" id="slide-10">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.7 / Aide alimentaire</p>
+      <h2 class="slide-title reveal">Top 10 — Aide alimentaire reçue (2013–2016)</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col right-heavy" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <ul class="bullet-list">
+            <li class="reveal"><span class="hi-red">Syrie</span> — <strong>1,86 Md kg</strong></li>
+            <li class="reveal"><span class="hi-white">Éthiopie</span> — 1,38 Md kg</li>
+            <li class="reveal"><span class="hi-white">Yémen</span> — 1,21 Md kg</li>
+            <li class="reveal">Soudan du Sud — 695 M · Soudan — 670 M</li>
+            <li class="reveal">Kenya — 553 M · Bangladesh — 348 M</li>
+            <li class="reveal">Somalie — 293 M · RDC — 289 M · Niger — 276 M</li>
+          </ul>
+          <div class="divider reveal"></div>
+          <div class="stat-box red-accent reveal">
+            <span class="stat-label">La <strong style="color:var(--red);">Syrie</strong> domine le classement — reflet direct de la guerre civile qui ravage le pays depuis 2011.</span>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right">
+          <img src="exports/05_top10_aide.png" alt="Top 10 aide alimentaire reçue">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 11 — 3.8 ÉVOLUTION AIDE TOP 5
+       ============================================================ -->
+  <section class="slide" id="slide-11">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.8 / Dynamiques de l'aide</p>
+      <h2 class="slide-title reveal">Évolution de l'aide — Top 5 pays (2013–2016)</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col right-heavy" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <div class="stat-box red-accent reveal">
+            <div style="font-family:var(--font-mono);color:var(--red);font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:700;">Yémen +76%</div>
+            <span class="stat-label">Explosion de l'aide en 2015–2016 — déclenchement de la guerre civile yéménite.</span>
+          </div>
+          <div class="stat-box reveal" style="border-left:3px solid var(--text-dim);">
+            <div style="font-family:var(--font-mono);color:var(--text-muted);font-size:clamp(1.1rem,2.2vw,1.7rem);font-weight:700;">Syrie −79%</div>
+            <span class="stat-label">Chute brutale en 2016 — accès humanitaire bloqué par les combats.</span>
+          </div>
+          <div class="divider reveal"></div>
+          <div class="stat-box red-top reveal" style="padding:clamp(0.75rem,1.5vw,1.4rem);">
+            <div style="font-family:var(--font-display);font-size:var(--h3-size);font-weight:700;color:var(--text);margin-bottom:0.3rem;">L'aide suit les crises géopolitiques</div>
+            <span class="stat-label" style="font-size:var(--body-size);line-height:1.6;">La distribution de l'aide est directement corrélée aux conflits armés, pas uniquement aux besoins nutritionnels réels.</span>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right">
+          <img src="exports/04_evolution_aide.png" alt="Évolution aide alimentaire top 5">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 12 — 3.9 BOTTOM 10 DISPONIBILITÉ
+       ============================================================ -->
+  <section class="slide" id="slide-12">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.9 / Déficit calorique</p>
+      <h2 class="slide-title reveal">Bottom 10 — Disponibilité calorique par pays (2017)</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col right-heavy" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <ul class="bullet-list">
+            <li class="reveal"><span class="hi-red">RCA</span> — <strong>1 879 kcal/j</strong></li>
+            <li class="reveal"><span class="hi-red">Zambie</span> — <strong>1 924 kcal/j</strong></li>
+            <li class="reveal"><span class="hi-red">Madagascar</span> — 2 056 kcal/j</li>
+            <li class="reveal"><span class="hi-red">Afghanistan</span> — 2 087 kcal/j</li>
+            <li class="reveal"><span class="hi-red">Haïti</span> — 2 089 kcal/j</li>
+          </ul>
+          <div class="divider reveal"></div>
+          <div class="stat-box red-accent reveal">
+            <span class="stat-label">
+              Seuil FAO : <strong style="color:var(--text);">2 500 kcal/j</strong><br>
+              Tous ces pays sont <strong style="color:var(--red);">sous le seuil minimal</strong> de survie recommandé.
+            </span>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right">
+          <img src="exports/07_bottom10_dispo.png" alt="Bottom 10 disponibilité calorique">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 13 — 3.10 TOP 10 DISPONIBILITÉ
+       ============================================================ -->
+  <section class="slide" id="slide-13">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.10 / Surplus calorique</p>
+      <h2 class="slide-title reveal">Top 10 — Disponibilité calorique par pays (2017)</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col right-heavy" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <ul class="bullet-list">
+            <li class="reveal"><span class="hi-blue">Autriche</span> — <strong>3 770 kcal/j</strong></li>
+            <li class="reveal"><span class="hi-blue">Belgique</span> — <strong>3 737 kcal/j</strong></li>
+            <li class="reveal"><span class="hi-blue">Turquie</span> — 3 708 kcal/j</li>
+            <li class="reveal"><span class="hi-blue">États-Unis</span> — 3 682 kcal/j</li>
+          </ul>
+          <div class="divider reveal"></div>
+          <div class="stat-box blue-accent reveal">
+            <span class="stat-label">Moyenne mondiale : <strong style="color:var(--blue);">2 847 kcal/j</strong></span>
+          </div>
+          <div class="stat-box red-accent reveal">
+            <div style="font-family:var(--font-mono);font-size:var(--h3-size);color:var(--red);font-weight:700;">×2</div>
+            <span class="stat-label">Écart maximal entre la <strong style="color:var(--red);">RCA (1 879)</strong> et l'<strong style="color:var(--blue);">Autriche (3 770)</strong></span>
+          </div>
+        </div>
+
+        <div class="col-img reveal-right">
+          <img src="exports/06_top10_dispo.png" alt="Top 10 disponibilité calorique">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 14 — 3.11 THAÏLANDE & MANIOC
+       ============================================================ -->
+  <section class="slide" id="slide-14">
+    <div class="slide-content">
+      <p class="slide-number reveal">3.11 / Cas d'étude</p>
+      <h2 class="slide-title reveal">Thaïlande & Manioc — Le paradoxe de l'export</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="two-col" style="flex:1;min-height:0;">
+        <div class="col-text">
+          <div class="reveal">
+            <div class="stat-hero red" data-counter="83.4" data-suffix="%">83.4%</div>
+            <div class="stat-label">de la production de manioc exportée hors de Thaïlande</div>
+          </div>
+          <div class="divider reveal"></div>
+          <ul class="bullet-list">
+            <li class="reveal">La Thaïlande est un <span class="hi-white">géant agricole mondial</span></li>
+            <li class="reveal">La sous-nutrition est <span class="hi-red">présente sur le territoire</span> national</li>
+            <li class="reveal">La ressource alimentaire est produite localement mais <span class="hi-red">non redistribuée</span></li>
+          </ul>
+        </div>
+
+        <div class="col-text">
+          <div class="stat-box red-top reveal" style="padding:clamp(0.9rem,1.8vw,1.8rem);">
+            <div style="font-family:var(--font-display);font-size:var(--h3-size);font-weight:700;color:var(--red);margin-bottom:0.5rem;">Exemple parfait du paradoxe mondial</div>
+            <p class="stat-label" style="font-size:var(--body-size);line-height:1.7;">
+              Un pays produit massivement de la nourriture, l'exporte vers des marchés solvables,
+              pendant qu'une partie de sa propre population ne dispose pas du minimum nutritionnel.
+            </p>
+          </div>
+          <div class="stat-box reveal">
+            <span class="stat-label">Ce modèle est représentatif de nombreux pays exportateurs agricoles en Asie, Amérique latine et Afrique.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 15 — CONCLUSION
+       ============================================================ -->
+  <section class="slide" id="slide-15">
+    <div class="slide-content">
+      <p class="slide-number reveal">Conclusion</p>
+      <h2 class="slide-title reveal">La faim est un problème de distribution, pas de production</h2>
+      <div class="red-bar reveal"></div>
+
+      <div class="conclusion-grid reveal">
+        <div class="conclusion-card">
+          <div class="conclusion-num" data-counter="110.9" data-suffix="%">110.9%</div>
+          <div class="conclusion-text">
+            Le monde produit assez pour nourrir <strong>110% de sa population</strong>.
+            La production n'est pas le problème.
+          </div>
+        </div>
+        <div class="conclusion-card">
+          <div class="conclusion-num" data-counter="535" data-suffix="M">535M</div>
+          <div class="conclusion-text">
+            <strong>535 millions de personnes</strong> restent sous-nutries malgré un surplus alimentaire mondial avéré.
+          </div>
+        </div>
+        <div class="conclusion-card">
+          <div class="conclusion-num" style="font-size:clamp(0.9rem,1.8vw,1.5rem);line-height:1.3;">DISTRIB.<br>&amp; GOUV.</div>
+          <div class="conclusion-text">
+            La faim est un échec de <strong>distribution et de gouvernance</strong> — économique, politique, géopolitique.
+          </div>
+        </div>
+      </div>
+
+      <div class="divider reveal" style="margin-top:clamp(0.5rem,1.2vw,1.2rem);"></div>
+      <p class="reveal" style="font-size:var(--small-size);color:var(--text-muted);text-align:center;">
+        Source : FAOSTAT — Organisation des Nations Unies pour l'alimentation et l'agriculture · Données 2013–2017
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SLIDE 16 — MERCI & QUESTIONS
+       ============================================================ -->
+  <section class="slide merci-slide" id="slide-16">
+    <div class="merci-bg">?</div>
+    <div class="slide-content">
+      <p class="merci-sub reveal">Étude FAO · 2013–2017</p>
+      <div class="merci-big reveal">Merci.</div>
+      <div class="red-bar reveal" style="margin:0 auto clamp(1rem,2vw,2rem);"></div>
+      <div class="merci-big reveal" style="font-size:clamp(1.8rem,5vw,4.5rem);color:var(--red);">Des questions ?</div>
+      <p class="merci-meta reveal">
+        Source : FAOSTAT — FAO · Données agrégées 2013–2017<br>
+        Python · Pandas · Matplotlib · Seaborn · Plotly · Folium
+      </p>
+    </div>
+  </section>
+
+
+  <script>
+    /* ============================================
+       SLIDE PRESENTATION CONTROLLER
+       Handles: keyboard nav, wheel, touch, progress,
+       nav dots, intersection observer for animations.
+       ============================================ */
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.total = this.slides.length;
+        this.current = 0;
+        this.progressBar = document.getElementById('progressBar');
+        this.navDotsContainer = document.getElementById('navDots');
+        this.dots = [];
+        this.animatedSlides = new Set();
+
+        this.buildNavDots();
+        this.observeSlides();
+        this.setupKeyboard();
+        this.setupWheel();
+        this.setupTouch();
+      }
+
+      /* Build navigation dots — always clear first to avoid duplicates */
+      buildNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'nav-dot' + (i === 0 ? ' active' : '');
+          btn.setAttribute('aria-label', `Slide ${i + 1}`);
+          btn.addEventListener('click', () => this.goTo(i));
+          this.navDotsContainer.appendChild(btn);
+          this.dots.push(btn);
+        });
+      }
+
+      /* Intersection Observer: adds .visible, triggers counters */
+      observeSlides() {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              const idx = this.slides.indexOf(entry.target);
+              if (idx !== -1) this.activate(idx);
+              if (!this.animatedSlides.has(idx)) {
+                this.animatedSlides.add(idx);
+                this.runCounters(entry.target);
+              }
+            }
+          });
+        }, { threshold: 0.5 });
+
+        this.slides.forEach(s => io.observe(s));
+      }
+
+      activate(idx) {
+        this.current = idx;
+        this.dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        const pct = this.total > 1 ? (idx / (this.total - 1)) * 100 : 0;
+        this.progressBar.style.width = pct + '%';
+        document.getElementById('slideCounter').textContent = (idx + 1) + ' / ' + this.total;
+      }
+
+      goTo(idx) {
+        idx = Math.max(0, Math.min(this.total - 1, idx));
+        this.slides[idx].scrollIntoView({ behavior: 'smooth' });
+      }
+
+      /* Keyboard: arrows, space, page up/down, home/end */
+      setupKeyboard() {
+        document.addEventListener('keydown', e => {
+          if (document.body.classList.contains('edit-active') && e.target.contentEditable === 'true') return;
+          const map = {
+            'ArrowDown': 1, 'ArrowRight': 1, ' ': 1, 'PageDown': 1,
+            'ArrowUp': -1, 'ArrowLeft': -1, 'PageUp': -1,
+          };
+          if (map[e.key] !== undefined) { e.preventDefault(); this.goTo(this.current + map[e.key]); }
+          if (e.key === 'Home') { e.preventDefault(); this.goTo(0); }
+          if (e.key === 'End')  { e.preventDefault(); this.goTo(this.total - 1); }
+        });
+      }
+
+      /* Wheel: throttled to 800ms to avoid over-scrolling */
+      setupWheel() {
+        let last = 0;
+        document.addEventListener('wheel', e => {
+          e.preventDefault();
+          const now = Date.now();
+          if (now - last < 800) return;
+          last = now;
+          this.goTo(this.current + (e.deltaY > 0 ? 1 : -1));
+        }, { passive: false });
+      }
+
+      /* Touch: swipe up/down */
+      setupTouch() {
+        let sy = 0;
+        document.addEventListener('touchstart', e => { sy = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', e => {
+          const dy = sy - e.changedTouches[0].clientY;
+          if (Math.abs(dy) > 50) this.goTo(this.current + (dy > 0 ? 1 : -1));
+        }, { passive: true });
+      }
+
+      /* Counter animation — eased from 0 to target over 1.2s */
+      runCounters(slide) {
+        slide.querySelectorAll('[data-counter]').forEach(el => {
+          const target = parseFloat(el.dataset.counter);
+          const suffix = el.dataset.suffix || '';
+          const isInt = el.dataset.format === 'integer';
+          const isDecimal = !isInt && target % 1 !== 0;
+          const duration = 1200;
+          const t0 = performance.now();
+
+          const tick = (now) => {
+            const p = Math.min((now - t0) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 4);
+            const val = target * eased;
+
+            if (isInt) {
+              el.textContent = Math.round(val).toLocaleString('fr-FR');
+            } else if (isDecimal) {
+              el.textContent = val.toFixed(1) + suffix;
+            } else {
+              el.textContent = Math.round(val) + suffix;
+            }
+
+            if (p < 1) {
+              requestAnimationFrame(tick);
+            } else {
+              // Settle on exact final value
+              el.textContent = isInt
+                ? target.toLocaleString('fr-FR')
+                : (isDecimal ? target.toFixed(1) + suffix : Math.round(target) + suffix);
+            }
+          };
+          requestAnimationFrame(tick);
+        });
+      }
+    }
+
+    /* ============================================
+       INLINE EDITOR
+       Toggle with E key, hotzone hover, or icon click.
+       Ctrl+S exports a clean HTML file (edit state stripped).
+       ============================================ */
+    class InlineEditor {
+      constructor() {
+        this.isActive = false;
+        this.toggle   = document.getElementById('editToggle');
+        this.banner   = document.getElementById('editBanner');
+        this.hotzone  = document.getElementById('editHotzone');
+        this.hideTimeout = null;
+
+        /* Which elements become editable in edit mode */
+        this.selector = [
+          'h1','h2','h3','h4','p',
+          '.slide-number','.slide-title','.stat-label',
+          '.stat-hero','.stat-large','.conclusion-num','.conclusion-text',
+          '.title-eyebrow','.title-meta','.title-main',
+          'li','.hi-red','.hi-blue','.hi-white'
+        ].join(',');
+
+        this.setupHover();
+        this.setupClick();
+        this.setupKeys();
+      }
+
+      /* Hover on top-left corner reveals pencil button with 400ms grace */
+      setupHover() {
+        const show = () => { clearTimeout(this.hideTimeout); this.toggle.classList.add('show'); };
+        const hide = () => {
+          this.hideTimeout = setTimeout(() => {
+            if (!this.isActive) this.toggle.classList.remove('show');
+          }, 400);
+        };
+        this.hotzone.addEventListener('mouseenter', show);
+        this.hotzone.addEventListener('mouseleave', hide);
+        this.hotzone.addEventListener('click', () => this.flip());
+        this.toggle.addEventListener('mouseenter', show);
+        this.toggle.addEventListener('mouseleave', hide);
+      }
+
+      setupClick() {
+        this.toggle.addEventListener('click', () => this.flip());
+      }
+
+      setupKeys() {
+        document.addEventListener('keydown', e => {
+          /* E key toggles edit mode (skip when inside editable) */
+          if ((e.key === 'e' || e.key === 'E') && e.target.contentEditable !== 'true') {
+            this.flip();
+          }
+          /* Ctrl+S / Cmd+S exports the file */
+          if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            this.exportFile();
+          }
+        });
+      }
+
+      flip() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('edit-active', this.isActive);
+        this.toggle.classList.toggle('active', this.isActive);
+        this.toggle.textContent = this.isActive ? '✓' : '✏️';
+        this.banner.classList.toggle('active', this.isActive);
+
+        document.querySelectorAll(this.selector).forEach(el => {
+          if (this.isActive) el.setAttribute('contenteditable', 'true');
+          else el.removeAttribute('contenteditable');
+        });
+      }
+
+      /* Export a clean copy — strips all edit-mode classes & attributes */
+      exportFile() {
+        /* 1. Temporarily remove edit state from DOM */
+        const editable = Array.from(document.querySelectorAll('[contenteditable]'));
+        editable.forEach(el => el.removeAttribute('contenteditable'));
+        document.body.classList.remove('edit-active');
+        this.toggle.classList.remove('active', 'show');
+        this.banner.classList.remove('active');
+
+        /* 2. Capture clean HTML */
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+        /* 3. Restore edit state so the user can keep editing */
+        if (this.isActive) {
+          document.body.classList.add('edit-active');
+          editable.forEach(el => el.setAttribute('contenteditable', 'true'));
+          this.toggle.classList.add('active');
+          this.banner.classList.add('active');
+        }
+
+        /* 4. Trigger download */
+        const blob = new Blob([html], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'fao-sous-nutrition-2013-2017.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    }
+
+    /* Boot */
+    const pres = new SlidePresentation();
+    const editor = new InlineEditor();
+
+    /* Date dynamique sur le slide titre */
+    document.getElementById('dateJour').textContent = new Date().toLocaleDateString('fr-FR', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+  </script>
+</body>
+</html>
